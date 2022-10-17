@@ -2,42 +2,73 @@ const express = require('express');
 const abc = require('../introduction/intro')
 const router = express.Router();
 
-router.get('/test-me', function (req, res) {
-    console.log('My batch is', abc.name)
-    abc.printName()
-    res.send('My second ever api!')
+router.get('/movies', function (req, res) {                               
+    console.log("movier are : ", req.params)
+    let mov = ["Rang de basanti", "The shining", "Lord of the rings", "Batman begins"]
+    res.send(mov)
 });
 
-router.get('/students', function (req, res){
-    console.log("The path params in the request are : ", req.params)
-    let students = ['Sabiha', 'Neha', 'Akash']
-    res.send(students)
-})
+router.get('/movies/:indexNumber', function (req, res) {                  
+    let mov = ["Rang de basanti", "The shining", "Lord of the rings", "Batman begins"]
+    const index = req.params.indexNumber
+    res.send(mov[index]) 
+});
 
 
-// Example 1 for path params
-router.get('/students/:studentName', function(req, res){
-    // ':' denotes that the following part of route is a variable
-    // The value of this variable is what we are sending in the request url after /students
-    // This value is set in the form of an object inside req.params
-    // The object contain key value pairs
-    // key is the variable in the route
-    // value is whatever dynamic value sent in the request url
-    let myParams = req.params
+router.get('/movies/:indexNumber', function (req, res) {                  
+    let mov = ["Rang de basanti", "The shining", "Lord of the rings", "Batman begins"]
+    const index = req.params.indexNumber
+   // res.send(mov[index])
+    if(index >= mov.length){                                                  
+    res.send("use valid index")
+    }else{
+        res.send(mov[index]) 
+    }
+});
 
-    // params attribute is fixed in a request object
-    // params contains the path parameters object
-    console.log("The path params in the request are : ", myParams)
-    res.send('The full name is ' + myParams.studentName )
-})
 
-// Example 2 for path params
-router.get('/student-details/:name', function(req, res){
-    let requestParams = req.params
-    console.log("This is the request ", requestParams)
-    let studentName = requestParams.name
-    console.log('Name of the student is ', studentName)
-    res.send('Dummy response')
-})
+router.get('/films', function (req, res) {                               
+    console.log("films are : ", req.params)
+    let mov = [ {
+        "id": 1,
+        "name": "The Shining"
+       }, {
+        "id": 2,
+        "name":"Incendies"
+       }, {
+        "id": 3,
+        "name": "Rang de Basanti"
+       }, {
+        "id": 4,
+        "name": "Finding Nemo"
+       }]
+       
+    res.send(mov)
+});
 
-module.exports = router;
+
+router.get('/films/:filmid', function (req, res) {                               
+    let objectid = [{
+        "id": 1,
+        "name": "The Shining"
+       }, {
+        "id": 2,
+        "name":"Incendies"
+       }, {
+        "id": 3,
+        "name": "Rang de Basanti"
+       }, {
+        "id": 4,
+        "name": "Finding Nemo"
+       }]
+      let z=req.params.filmid
+      if(z > objectid.length  ||  z==0){                                                  
+      res.send("No movie exists with this id")
+      }else{
+     let z=req.params.filmid-1 
+      res.send(objectid[z]) 
+    }
+});
+ 
+
+ module.exports = router;
