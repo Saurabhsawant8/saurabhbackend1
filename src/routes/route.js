@@ -1,20 +1,20 @@
 const express = require('express');
 const abc = require('../introduction/intro')
 const router = express.Router();
-
+//q1
 router.get('/movies', function (req, res) {                               
     console.log("movier are : ", req.params)
     let mov = ["Rang de basanti", "The shining", "Lord of the rings", "Batman begins"]
     res.send(mov)
 });
-
+//q2
 router.get('/movies/:indexNumber', function (req, res) {                  
     let mov = ["Rang de basanti", "The shining", "Lord of the rings", "Batman begins"]
     const index = req.params.indexNumber
     res.send(mov[index]) 
 });
 
-
+//q3
 router.get('/movies/:indexNumber', function (req, res) {                  
     let mov = ["Rang de basanti", "The shining", "Lord of the rings", "Batman begins"]
     const index = req.params.indexNumber
@@ -26,7 +26,7 @@ router.get('/movies/:indexNumber', function (req, res) {
     }
 });
 
-
+//q4
 router.get('/films', function (req, res) {                               
     console.log("films are : ", req.params)
     let mov = [ {
@@ -46,7 +46,7 @@ router.get('/films', function (req, res) {
     res.send(mov)
 });
 
-
+//q5
 router.get('/films/:filmid', function (req, res) {                               
     let objectid = [{
         "id": 1,
