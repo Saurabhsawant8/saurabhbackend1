@@ -1,6 +1,45 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 
+
+const checkAuthorisation=async function(req,res){
+  
+     const USERid=req.params.userId
+     let useris=await userModel.findById({_id:USERid})
+     res.send({useris})
+ 
+}
+
+
+
+
+const updateUser=async function(req,res){
+  const USERid=req.params.userId
+  let data2=req.body
+  let updatedata=await userModel.findByIdAndUpdate({_id:USERid},{$set:data2},{new:true})
+  res.send({updatedata})
+}
+
+
+const deletUser=async function(req,res){
+  const USERid=req.params.userId
+  let deletdata=await userModel.findByIdAndUpdate({_id:USERid},{$set:{isDeleted:true}},{new:true})
+  res.send({deletdata})
+
+}
+
+
+
+module.exports.checkAuthorisation = checkAuthorisation;
+module.exports.updateUser = updateUser;
+module.exports.deletUser = deletUser;
+
+
+
+
+
+
+
 const createUser = async function (abcd, xyz) {
   //You can name the req, res objects anything.
   //but the first parameter is always the request 
@@ -11,7 +50,7 @@ const createUser = async function (abcd, xyz) {
   xyz.send({ msg: savedData });
 };
 
-const loginUser = async function (req, res) {
+const l = async function (req, res) {
   let userName = req.body.emailId;
   let password = req.body.password;
 
@@ -66,7 +105,7 @@ const getUserData = async function (req, res) {
   res.send({ status: true, data: userDetails });
 };
 
-const updateUser = async function (req, res) {
+const updateser = async function (req, res) {
 // Do the same steps here:
 // Check if the token is present
 // Check if the token present is a valid token
@@ -115,8 +154,4 @@ const postMessage = async function (req, res) {
     return res.send({status: true, data: updatedUser})
 }
 
-module.exports.createUser = createUser;
-module.exports.getUserData = getUserData;
-module.exports.updateUser = updateUser;
-module.exports.loginUser = loginUser;
-module.exports.postMessage = postMessage
+

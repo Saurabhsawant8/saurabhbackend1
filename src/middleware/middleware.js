@@ -1,13 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const userController= require("../controllers/userController")
 const jwt = require("jsonwebtoken");
-const commonMW=require("../middleware/middleware")
+const userModel = require("../models/userModel");
 
 
-router.get("/test-me", function (req, res) {
-    res.send("My first ever api!")
-})
 
 const midd1=async function(req,res,next){
     const Token=req.headers["x-auth-token"]
@@ -25,15 +19,7 @@ const midd1=async function(req,res,next){
    const USERid=req.params.userId
    if(decodedToken._id!=USERid) return res.send("not authorised")
    next()
-}
+  }
 
 
-
-
-
-
-router.get("/checkAuthorisation/:userId", commonMW.midd1, userController.checkAuthorisation)
-router.put("/updateUser/:userId", commonMW.midd1, userController.updateUser)
-router.delete("/deletUser/:userId", commonMW.midd1, userController.deletUser)
-
-module.exports = router;
+  module.exports.midd1=midd1
