@@ -1,18 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const userController= require("../controllers/userController")
+const jwt = require("jsonwebtoken");
 
 router.get("/test-me", function (req, res) {
     res.send("My first ever api!")
 })
 
-router.post("/users", userController.createUser  )
 
-router.post("/login", userController.loginUser)
+const middle1= function (req,res,next) {
+    let Token=req.headers["x-auth-token"]
+    if(!Token)  return res.send("mandatory header is missing")
+    next()
+};
 
-//The userId is sent by front end
-router.get("/users/:userId", userController.getUserData)
 
-router.put("/users/:userId", userController.updateUser)
 
-module.exports = router;
+router.post("/createUser",userController.createUser  )
+
+router.post("/loginUser",userController.loginUser )
+
+router.get("/verifyUser/:userId",middle1,userController.verifyUser )
+
+router.put("/updateUser/:userId",middle1,userController.updateUser )
+
+router.delete("/deletUser/:userId",middle1,userController.deletUser )
+
+module.exports=router

@@ -14,7 +14,11 @@ const userSchema = new mongoose.Schema( {
         type: String,
         enum: ["male", "female", "other"]
     },
+    isDeleted:{
+        type:Number,
+        default:false
+    },
     age: Number,
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('UserloginVerify', userSchema)
