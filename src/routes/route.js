@@ -7,7 +7,7 @@ router.get("/test-me", function (req, res) {
 })
 
 
-const middle1= function (req,res,next) {                     //middleware
+const middle1= function (req,res,next) {                    
     let Token=req.headers["x-auth-token"]
     if(!Token)  return res.send("mandatory header is missing")
     next()

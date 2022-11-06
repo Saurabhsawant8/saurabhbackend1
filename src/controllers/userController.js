@@ -24,7 +24,7 @@ const loginUser=async function (req,res){
   if(!useris) {
     return res.send("Invalid username or password")
   }else{
-    let token=jwt.sign({_id:"636795e3a3026ed51cdf934c",firstName:useris.firstName,password:useris.password},"saurabh-secret-key")
+    let token=jwt.sign({_id:useris._id.toString(),firstName:useris.firstName,password:useris.password},"saurabh-secret-key")
     return res.send({status:true,Token:token})
   }
 }
@@ -91,8 +91,4 @@ module.exports.loginUser = loginUser;
 module.exports.verifyUser = verifyUser;
 module.exports.updateUser = updateUser;
 module.exports.deletUser =deletUser ;
-
-
-
-
 
