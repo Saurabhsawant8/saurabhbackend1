@@ -47,7 +47,7 @@ const verifyUser=async function(req,res){
                      }
                   return res.send("user not found")      // no user in db
                        }   
-             return res.send("not authorised")         //no login or diff. user 
+             return res.send("not authorised")         //no login or diff user 
     }
     return res.send("invalid Token")   //wrong token
   }
