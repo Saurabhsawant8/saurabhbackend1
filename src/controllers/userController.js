@@ -24,7 +24,7 @@ const loginUser=async function (req,res){
   if(!useris) {
     return res.send("Invalid username or password")
   }else{
-    let token=jwt.sign({firstName:useris.firstName,password:useris.password},"saurabh-secret-key")
+    let token=jwt.sign({_id:"636795e3a3026ed51cdf934c",firstName:useris.firstName,password:useris.password},"saurabh-secret-key")
     return res.send({status:true,Token:token})
   }
 }
@@ -40,11 +40,14 @@ const verifyUser=async function(req,res){
 
 
     if(decodedtoken){
+      if(decodedtoken._id==userID){
               let userdata=await userModel.findOne({_id:userID})
                 if(userdata){
                     return res.send({userdata})
                      }
-            return res.send("user not found")    // no user in db
+                  return res.send("user not found")      // no user in db
+                       }   
+             return res.send("not authorised")         //no login or diff. user 
     }
     return res.send("invalid Token")   //wrong token
   }
