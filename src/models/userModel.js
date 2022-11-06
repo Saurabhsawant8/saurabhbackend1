@@ -21,4 +21,4 @@ const userSchema = new mongoose.Schema( {
     age: Number,
 }, { timestamps: true });
 
-module.exports = mongoose.model('UserloginVerify', userSchema)
+module.exports = mongoose.model('UserloginVerify', userSchema)     //userloginverifies
