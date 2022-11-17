@@ -1,6 +1,6 @@
 const authorModel = require('../models/authorModel')
 const jwt = require('jsonwebtoken')
-const { isValidName, isValidTitle, isValidEmail, isValid } = require("../MiddleWare/Valid")
+const { isValidName, isValidTitle, isValidEmail, isValid } = require("../validator/Valid")
 
 
 const createAuthor = async function(req,res){

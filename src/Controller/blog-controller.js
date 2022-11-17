@@ -1,7 +1,7 @@
 const blogModel = require('../models/blogModel')
 const authorModel = require('../models/authorModel')
 const moment = require('moment')
-const { isValid, isValidBlogTitle, isValidObjectIds , isBoolean} = require("../MiddleWare/Valid");
+const { isValid, isValidBlogTitle, isValidObjectIds , isBoolean} = require("../validator/Valid");
 
 const createBlog = async function (req, res) {
     try {
@@ -35,7 +35,7 @@ const createBlog = async function (req, res) {
         }
 
         if(isPublished){
-            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Publishehion [true , false]" })
+            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Publisher status [true , false]" })
             if (isPublished == true) {
             req.body.publishedAt = moment().format() }
         }
@@ -123,7 +123,7 @@ const {title,body,category,authorId ,isPublished} = req.body;
         }
 
         if(isPublished){
-            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Publishehion [true , false]" })
+            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Publisher status [true , false]" })
             if (isPublished == true) {
             req.body.publishedAt = moment().format() }
         }
@@ -205,8 +205,9 @@ const deleteblogsByQuery = async function (req, res) {
         if (!isValidObjectIds(authorId)) {
             return res.status(400).send({status :false , msg: "Enter Valid blog Id" })
         }
-
-        const getAllBlogs = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag }, {authorId : authorId}] ,isDeleted : false })
+        
+        const getAllBlogs = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag },
+             {authorId : authorId}] ,isDeleted : false })
       
     if ( getAllBlogs.length == 0){
         return res.status(404).send({status : false , message : 'already deleted'})    }
@@ -216,10 +217,11 @@ const deleteblogsByQuery = async function (req, res) {
             if( authorIDs == req.decodedToken.authorid) return a   }) 
 
     if(AuthorisedBlogs.length !== 0){
-        await blogModel.updateMany({ $or:[{category : category} , {subcategory : subcategory} ,{tags:tag} ], authorId : req.decodedToken.authorid , isDeleted : false} , {$set :{isDeleted : true , deletedAt : moment().format() ,isPublished : false , publishedAt : ''  }} ,{new : true}  )         
+        await blogModel.updateMany({ $or:[{category : category} , {subcategory : subcategory} ,{tags:tag} ], authorId : req.decodedToken.authorid , isDeleted : false},
+            {$set :{isDeleted : true , deletedAt : moment().format() ,isPublished : false , publishedAt : ''  }} ,{new : true}  )         
         return  res.status(200).send({status :true , msg : 'Deleted successfully ' })  
 
-    }else{  return res.status(401).send({status : false , msg : 'Not Authorised'})    }  }
+    }else{  return res.status(401).send({status : false , msg : 'Not Authorised'}) }  }
     
     catch (err) { 
          return res.send({ status: false, Error: err.message }) }
