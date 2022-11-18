@@ -132,11 +132,7 @@ const {title,body,category,authorId ,isPublished} = req.body;
        }
        
         if(isPublished){
-<<<<<<< HEAD
             if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Publisher status [true , false]" })
-=======
-            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Published status [true , false]" })
->>>>>>> ef05a0b4084bfe8c24a562075f6dc8a6461dc278
             if (isPublished == true) {
             req.body.publishedAt = moment().format() }
         }
@@ -216,15 +212,9 @@ const deleteblogsByQuery = async function (req, res) {
         if (!isValidObjectIds(authorId)) {
             return res.status(400).send({status :false , msg: "Enter Valid author Id" })
         }
-<<<<<<< HEAD
-        
-        const getAllBlogs = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag },
-             {authorId : authorId}] ,isDeleted : false })
-=======
     }    
 
         const getAllBlogs = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag }, {authorId : authorId}] ,isDeleted : false })
->>>>>>> ef05a0b4084bfe8c24a562075f6dc8a6461dc278
       
     if ( getAllBlogs.length == 0){
         return res.status(404).send({status : false , message : 'already deleted'})    }
@@ -233,12 +223,15 @@ const deleteblogsByQuery = async function (req, res) {
             const authorIDs = a.authorId.toString()
             if( authorIDs == req.decodedToken.authorid) return a   }) 
 
+            
     if(AuthorisedBlogs.length !== 0){
-        await blogModel.updateMany({ $or:[{category : category} , {subcategory : subcategory} ,{tags:tag} ], authorId : req.decodedToken.authorid , isDeleted : false},
-            {$set :{isDeleted : true , deletedAt : moment().format() ,isPublished : false , publishedAt : ''  }} ,{new : true}  )         
-        return  res.status(200).send({status :true , msg : 'Deleted successfully ' })  
-
-    }else{  return res.status(401).send({status : false , msg : 'Not Authorised'}) }  }
+    await blogModel.updateMany({ $or:[{category : category} , {subcategory : subcategory} ,{tags:tag} 
+        ,{authorId : req.decodedToken.authorid}] ,isDeleted : false} ,
+    {$set :{isDeleted : true , deletedAt : moment().format() ,isPublished : false , publishedAt : ''  }} ,{new : true}  )         
+       
+    return  res.status(200).send({status :true , msg : 'Deleted successfully '}  )  
+  }
+    else{  return res.status(401).send({status : false , msg : 'Not Authorised'})    }  }
     
     catch (err) { 
          return res.send({ status: false, Error: err.message }) }
