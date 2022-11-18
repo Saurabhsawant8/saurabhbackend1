@@ -12,7 +12,7 @@ const createBlog = async function (req, res) {
         }
         if (!isValid(title)) {      
             return res.status(400).send({status :false , msg: "Enter Title" })
-        }                                                                 // title contain only string anfd numbers
+        }                                                                
         if (!isValidBlogTitle(title)) {
             return res.status(400).send({status :false , msg: "create valid title" })
         }
@@ -33,7 +33,7 @@ const createBlog = async function (req, res) {
         }
 
         if(isPublished){
-            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter only true or false without quotes" })
+            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Published status [true , false]" })
             if (isPublished == true) {
             req.body.publishedAt = moment().format() }
         }
@@ -60,13 +60,17 @@ const getBlogs = async function (req, res) {
             const getAllBlogs = await blogModel.find({ isPublished: true, isDeleted: false })
             return res.status(200).send({ status: true, message: getAllBlogs })
         }
-        if (!isValidObjectIds(authorId)) {
-            return res.status(400).send({status :false , msg: "Enter Valid Author Id" })
+        if(category){
+            if (!isValid(category)) {
+                return res.status(400).send({status :false , msg: "Enter A Valid Category" })
+            }
+           
+        }if(authorId){
+            if (!isValidObjectIds(authorId)) {
+                return res.status(400).send({status :false , msg: "Enter Valid Author Id" })
+            }
         }
-        if (!isValid(category)) {
-            return res.status(400).send({status :false , msg: "Enter A Valid Category" })
-        }
-       
+
         const blog = await blogModel.find({ $or: [{ category: category }, { subcategory: subcategory }, { tags: tags }, { authorId: authorId }] ,isPublished : true ,isDeleted : false}  )
 
         if (blog.length == 0) {
@@ -85,6 +89,7 @@ module.exports.getBlogs = getBlogs
 const updateBlogs = async function (req, res) {
     try {
         const blogId = req.params.blogId
+
         if (!isValid(blogId)) {
             return res.status(400).send({status :false , msg: "Enter blog Id" })
         }
@@ -97,21 +102,26 @@ if (Object.keys(req.body).length == 0) return res.status(400).send({ status: fal
        
 const {title,body,category,authorId ,isPublished} = req.body;
         
-
-        if (!isValid(title)) {      
-            return res.status(400).send({status :false , msg: "Enter Title" })
-        }                                                                 // title contain only string anfd numbers
-        if (!isValidBlogTitle(title)) {
-            return res.status(400).send({status :false , msg: "create valid title" })
+        if(title){
+            if (!isValid(title)) {      
+                return res.status(400).send({status :false , msg: "Enter Title" })
+            }   
+            if (!isValidBlogTitle(title)) {
+                return res.status(400).send({status :false , msg: "create valid title" })
+            } 
         }
-        if (!isValid(body)) {
-            return res.status(400).send({ status :false ,msg: "Enter Body" })
-        }
+        if(body){
+            if (!isValid(body)) {
+                return res.status(400).send({ status :false ,msg: "Enter Body" })
+            }
+        }                                                   // title contain only string and numbers
        
+       if(category){
         if (!isValid(category)) {
             return res.status(400).send({status :false , msg: "Enter Category" })
         }
-       
+       }
+       if(authorId){
         if (!isValid(authorId)) {
             return res.status(400).send({status :false , msg: "Enter Author Id" })
         }
@@ -119,9 +129,14 @@ const {title,body,category,authorId ,isPublished} = req.body;
         if (!isValidObjectIds(authorId)) {
             return res.status(400).send({status :false , msg: "Enter Valid Author Id" })
         }
-
+       }
+       
         if(isPublished){
+<<<<<<< HEAD
             if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Publisher status [true , false]" })
+=======
+            if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Published status [true , false]" })
+>>>>>>> ef05a0b4084bfe8c24a562075f6dc8a6461dc278
             if (isPublished == true) {
             req.body.publishedAt = moment().format() }
         }
@@ -139,7 +154,7 @@ const {title,body,category,authorId ,isPublished} = req.body;
         else {
             const updateBlog = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, {
                 $set: {
-                    title: data.title, body: data.body, category: data.category, isPublished: true,publishedAt:moment().format()
+                    title: req.body.title, body: req.body.body, category: req.body.category, isPublished: true,publishedAt:moment().format()
                 },
                 $push: { subcategory: req.body.subcategory, tags: req.body.tags },
             },
@@ -194,16 +209,22 @@ const deleteblogsByQuery = async function (req, res) {
         if(!category && !subcategory && !tag && !authorId ){
           return  res.status(400).send({status : true , message : 'Enter the Valid query'})
         }
+    if(authorId){
         if (!isValid(authorId)) {
-            return res.status(400).send({status :false , msg: "Enter blog Id" })
+            return res.status(400).send({status :false , msg: "Enter author Id" })
         }
-
         if (!isValidObjectIds(authorId)) {
-            return res.status(400).send({status :false , msg: "Enter Valid blog Id" })
+            return res.status(400).send({status :false , msg: "Enter Valid author Id" })
         }
+<<<<<<< HEAD
         
         const getAllBlogs = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag },
              {authorId : authorId}] ,isDeleted : false })
+=======
+    }    
+
+        const getAllBlogs = await blogModel.find({$or:[{category : category} , {subcategory : subcategory} ,{tags:tag }, {authorId : authorId}] ,isDeleted : false })
+>>>>>>> ef05a0b4084bfe8c24a562075f6dc8a6461dc278
       
     if ( getAllBlogs.length == 0){
         return res.status(404).send({status : false , message : 'already deleted'})    }
