@@ -139,7 +139,7 @@ Refer below sample
   data: {
    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JJZCI6IjYyZmUzYmUzMzY2ZmFkNDZjY2Q1MzI3ZiIsImlhdCI6MTY2MDgzMDA4MywiZXhwIjoxNjYwODY2MDgzfQ.mSo-TLyRlGhMNcy4ftEvvIlCHlyEqpaFZc-iBth4lfg"
 
-  }
+  } 
 }
 ```
 #### Refer https://jsonplaceholder.typicode.com/guide/ for some fake blogs data.

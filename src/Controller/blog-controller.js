@@ -35,7 +35,7 @@ const createBlog = async function (req, res) {
         if(isPublished){
             if(!isBoolean(isPublished)) return res.status(400).send({status :false , msg: "Enter valid Published status [true , false]" })
             if (isPublished == true) {
-            req.body.publishedAt = moment().format() }
+            req.body.publishedAt = Date.now() }
         }
 
         const userExist = await authorModel.findById(authorId)
@@ -58,7 +58,7 @@ const getBlogs = async function (req, res) {
         const { category, subcategory, tags, authorId } = req.query
         if (!category && !subcategory && !tags && !authorId) {
             const getAllBlogs = await blogModel.find({ isPublished: true, isDeleted: false })
-            return res.status(200).send({ status: true, message: getAllBlogs })
+            return res.status(200).send({ status: true, data: getAllBlogs })
         }
         if(category){
             if (!isValid(category)) {
@@ -76,10 +76,10 @@ const getBlogs = async function (req, res) {
         if (blog.length == 0) {
             return res.status(400).send({ status: false, msg: 'Blog not found' })   }
 
-        else res.status(200).send({ status: true, msg: blog })
+        else res.status(200).send({ status: true, data: blog })
 
     } catch (err) {
-        res.status(500).send({ status: false, error: err.message });
+        res.status(500).send({ status: false, msg: err.message });
     }
 }
 
@@ -148,10 +148,11 @@ const {title,body,category,authorId ,isPublished} = req.body;
             res.status(401).send({ status: false, msg: "Not Authorized" })
         }
         else {
+
             const updateBlog = await blogModel.findOneAndUpdate({ _id: blogId, isDeleted: false }, {
                 $set: {
-                    title: req.body.title, body: req.body.body, category: req.body.category, isPublished: true,publishedAt:moment().format()
-                },
+                    title: req.body.title, body: req.body.body, category: req.body.category, isPublished: true,
+                    publishedAt: Date.now() },
                 $push: { subcategory: req.body.subcategory, tags: req.body.tags },
             },
                 { new: true })
@@ -191,7 +192,7 @@ const deleteBlog = async function (req, res) {
         }
     }
     catch (err) {
-        return res.status(500).send({ status: false, Error: err.message })
+        return res.status(500).send({ status: false, msg: err.message })
     }
 }
 
@@ -222,22 +223,20 @@ const deleteblogsByQuery = async function (req, res) {
         const AuthorisedBlogs = getAllBlogs.filter(a=>{
             const authorIDs = a.authorId.toString()
             if( authorIDs == req.decodedToken.authorid) return a   }) 
-
-            
+           
     if(AuthorisedBlogs.length !== 0){
     await blogModel.updateMany({ $or:[{category : category} , {subcategory : subcategory} ,{tags:tag} 
         ,{authorId : req.decodedToken.authorid}] ,isDeleted : false} ,
-    {$set :{isDeleted : true , deletedAt : moment().format() ,isPublished : false , publishedAt : ''  }} ,{new : true}  )         
+    {$set :{isDeleted : true , deletedAt : Date.now() ,isPublished : false , publishedAt : ''  }} ,{new : true}  )         
        
     return  res.status(200).send({status :true , msg : 'Deleted successfully '}  )  
   }
     else{  return res.status(401).send({status : false , msg : 'Not Authorised'})    }  }
     
     catch (err) { 
-         return res.send({ status: false, Error: err.message }) }
+         return res.send({ status: false, msg: err.message }) }
 }
 
 module.exports.deleteblogsByQuery = deleteblogsByQuery
 
 // ***********************************************************************************************************
-

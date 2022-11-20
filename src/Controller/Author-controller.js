@@ -31,7 +31,7 @@ const createAuthor = async function(req,res){
             return res.status(400).send({ msg: "Enter Email-Id" })
         }
         if (!isValidEmail(email)) {
-            return res.status(400).send({ msg: "enter valid email" })
+            return res.status(400).send({ msg: "Enter valid email" })
         }
 
         const checkEmail=await authorModel .findOne({email:email})
@@ -39,8 +39,11 @@ const createAuthor = async function(req,res){
         
         if(!password) return res.status(400).send({status:false,msg:"Enter Valid password"})
       
+        if (!isValid(password)) {
+            return res.status(400).send({ msg: "Enter Password" })
+        }
         const data = await authorModel.create(req.body)
-        res.status(201).send({status : true , msg : data})
+        res.status(201).send({status : true , data : data})
 
      
     } catch (error) {
@@ -73,13 +76,11 @@ const loginAuthor = async (req,res)=>{
 
         const payload = {authorid : authorExist._id.toString() ,  projectName : "Blogging-Sites" , "Author-Name" :fullName}
         const token = jwt.sign(payload ,"litium batch Group-3 Project -01")
-
-        res.status(200).send({status : true , token : token })
+        res.setHeader("x-api-key", token)
+        res.status(200).send({status : true ,data:{token : token} })
     } catch (error) {
         res.status(500).send({status : false , msg : error.message})
     }
 }
 
 module.exports.loginAuthor = loginAuthor
-
-
